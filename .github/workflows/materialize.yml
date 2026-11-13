@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
         - repositoryName: "nader-najjar/software-materialization-service-algorithm"
-          commitSHA: "131f780a663a54f7cf36bbeac66891757c9ab340"
+          commitSHA: "5f32e0ed0af272752eb303f49cd98729cf9c760a"
           buildSystem: "universal"
           platform: "aarch64-linux"
           runner: "ubuntu-24.04-arm"
@@ -41,19 +41,19 @@ jobs:
       id: "create-repository-token"
       uses: "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510"
       with:
+        client-id: "${{ vars.BUILD_PUBLISHER_APP_CLIENT_ID }}"
         permission-workflows: "write"
         private-key: "${{ secrets.BUILD_PUBLISHER_APP_PRIVATE_KEY }}"
         owner: "${{ env.REPOSITORY_OWNER }}"
         permission-contents: "write"
         repositories: "${{ matrix.repositoryName }}"
-        client-id: "${{ vars.BUILD_PUBLISHER_APP_CLIENT_ID }}"
     - name: "Find Release Artifact"
       id: "find-release-artifact"
       uses: "$/.github/actions/find-release-artifact"
       with:
+        repository-name: "${{ matrix.repositoryName }}"
         release-name: "${{ env.RELEASE_NAME }}"
         github-token: "${{ steps.create-repository-token.outputs.token }}"
-        repository-name: "${{ matrix.repositoryName }}"
     - name: "Check Out ${{ matrix.repositoryName }}"
       if: "steps.find-release-artifact.outputs.found != 'true'"
       uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
@@ -69,7 +69,7 @@ jobs:
       if: "steps.find-release-artifact.outputs.found != 'true'"
       uses: "$/.github/actions/publish-release-artifact"
       with:
+        repository-name: "${{ matrix.repositoryName }}"
         release-name: "${{ env.RELEASE_NAME }}"
         github-token: "${{ steps.create-repository-token.outputs.token }}"
         commit-sha: "${{ matrix.commitSHA }}"
-        repository-name: "${{ matrix.repositoryName }}"
