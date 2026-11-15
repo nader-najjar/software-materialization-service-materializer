@@ -10,7 +10,9 @@
   "steps": [
     {
       "name": "Build",
-      "operation": "build"
+      "operation": "build",
+      "clientIdVariable": "SMS_APP_CLIENT_ID",
+      "privateKeySecret": "SMS_APP_PRIVATE_KEY"
     }
   ]
 }
