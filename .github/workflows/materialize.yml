@@ -11,8 +11,8 @@ concurrency:
 permissions:
   contents: "read"
 jobs:
-  build:
-    name: "Build ${{ matrix.repositoryName }} (${{ matrix.platform }})"
+  step_1:
+    name: "Continuous Integration - Build ${{ matrix.repositoryName }} (${{ matrix.platform }})"
     env:
       CLIENT_ID_VARIABLE: "SMS_APP_CLIENT_ID"
       PRIVATE_KEY_SECRET: "SMS_APP_PRIVATE_KEY"
@@ -75,3 +75,15 @@ jobs:
         commit-sha: "${{ matrix.commitSHA }}"
         release-name: "${{ env.RELEASE_NAME }}"
         github-token: "${{ steps.create-repository-token.outputs.token }}"
+  step_2:
+    name: "Continuous Deployment - Production"
+    runs-on: "ubuntu-24.04-arm"
+    steps:
+    - name: "Reject Manual Retries"
+      uses: "$/.github/actions/reject-manual-retries"
+    - name: "Run Composite Action"
+      uses: "$/.github/actions/step_2"
+      with:
+        client-id: "${{ vars.SMS_APP_CLIENT_ID }}"
+        private-key: "${{ secrets.SMS_APP_PRIVATE_KEY }}"
+    needs: "step_1"

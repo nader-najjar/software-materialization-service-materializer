@@ -1,0 +1,48 @@
+name: Deploy service workflows
+description: Publish the service workflows with the built algorithm release.
+inputs:
+  client-id:
+    description: GitHub App client ID
+    required: true
+  private-key:
+    description: GitHub App private key
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Create service repository token
+      id: token
+      uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+      with:
+        client-id: ${{ inputs.client-id }}
+        private-key: ${{ inputs.private-key }}
+        owner: nader-najjar
+        repositories: software-materialization-service
+        permission-contents: write
+        permission-workflows: write
+
+    - name: Check out service repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: nader-najjar/software-materialization-service
+        token: ${{ steps.token.outputs.token }}
+        path: service
+
+    - name: Publish service workflows
+      shell: bash
+      working-directory: service
+      env:
+        ALGORITHM_RELEASE: "nader-najjar@software-materialization-service-algorithm-aarch64-linux-4031c59d7340bbe2b901e17239a69f8706ffffbd"
+      run: |
+        mkdir -p .github/workflows
+        for file in register.yml register-source.yml materialize-all-software.yml; do
+          template="$GITHUB_ACTION_PATH/workflows/$file"
+          grep -Fq '__ALGORITHM_RELEASE__' "$template"
+          sed "s|__ALGORITHM_RELEASE__|$ALGORITHM_RELEASE|g" "$template" > ".github/workflows/$file"
+        done
+        git add -- .github/workflows
+        if git diff --cached --quiet; then exit 0; fi
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git commit -m "Deploy service workflows"
+        git push
