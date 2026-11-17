@@ -21,7 +21,7 @@ jobs:
       matrix:
         include:
         - repositoryName: "nader-najjar/software-materialization-service-algorithm"
-          commitSHA: "491296c8f47f5e59016a133421d54372f9a35594"
+          commitSHA: "4031c59d7340bbe2b901e17239a69f8706ffffbd"
           buildSystem: "universal"
           platform: "aarch64-linux"
           runner: "ubuntu-24.04-arm"
