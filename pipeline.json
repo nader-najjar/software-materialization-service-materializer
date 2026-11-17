@@ -9,10 +9,26 @@
   ],
   "steps": [
     {
-      "name": "Build",
+      "name": "Continuous Integration - Build",
       "operation": "build",
       "clientIdVariable": "SMS_APP_CLIENT_ID",
       "privateKeySecret": "SMS_APP_PRIVATE_KEY"
+    },
+    {
+      "name": "Continuous Deployment - Production",
+      "operation": "run-composite-action",
+      "actionBundlePath": "./deploy",
+      "with": {
+        "client-id": "${{ vars.SMS_APP_CLIENT_ID }}",
+        "private-key": "${{ secrets.SMS_APP_PRIVATE_KEY }}"
+      },
+      "replacements": {
+        "@@ALGORITHM_RELEASE@@": {
+          "repositoryName": "nader-najjar/software-materialization-service-algorithm",
+          "branch": "main",
+          "platform": "aarch64-linux"
+        }
+      }
     }
   ]
 }
