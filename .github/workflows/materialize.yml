@@ -35,7 +35,7 @@ jobs:
       env:
         BUILD_SYSTEM: "${{ matrix.buildSystem }}"
     - name: "Set Release Name"
-      run: "repo='${{ matrix.repositoryName }}'; echo \"RELEASE_NAME=${repo/\\//@}-${{ matrix.platform }}-${{ matrix.commitSHA }}\" >> \"$GITHUB_ENV\""
+      run: "repo='${{ matrix.repositoryName }}'; echo \"RELEASE_NAME=${repo/\\//--}--${{ matrix.platform }}--${{ matrix.commitSHA }}\" >> \"$GITHUB_ENV\""
     - name: "Set Repository Owner"
       run: "echo \"REPOSITORY_OWNER=${REPOSITORY_NAME%%/*}\" >> \"$GITHUB_ENV\""
       env:
