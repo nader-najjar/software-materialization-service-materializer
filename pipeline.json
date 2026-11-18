@@ -24,6 +24,7 @@
       },
       "replacements": {
         "@@ALGORITHM_RELEASE@@": {
+          "artifactKind": "release-artifact",
           "repositoryName": "nader-najjar/software-materialization-service-algorithm",
           "branch": "main",
           "platform": "aarch64-linux"
