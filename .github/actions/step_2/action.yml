@@ -32,7 +32,7 @@ runs:
       shell: bash
       working-directory: service
       env:
-        ALGORITHM_RELEASE: "nader-najjar--software-materialization-service-algorithm--aarch64-linux--f962aa38febb60064501f368a9f30fa212335abf"
+        ALGORITHM_RELEASE: "nader-najjar--software-materialization-service-algorithm--aarch64-linux--4a30d9eec20daf0baa1ba4e36e556b1729d82d9a"
       run: |
         mkdir -p .github/workflows
         for file in register.yml register-source.yml materialize-all-software.yml; do
